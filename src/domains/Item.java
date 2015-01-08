@@ -24,6 +24,7 @@ public class Item {
     private double price;
     private double discount;
     private int account;
+    private int accounting;
     private double subtotal;
     private boolean promote;
 
@@ -62,6 +63,18 @@ public class Item {
         this.promote = promote;
     }
 
+    public void setAccounting()
+    {
+        accounting=account-1;
+    }
+    public boolean getPromote()
+    {
+        return  promote;
+    }
+    public int getAccounting()
+    {
+        return accounting;
+    }
     public String getName() {
         return name;
     }
@@ -80,7 +93,7 @@ public class Item {
         account= account+1;
 
     }
-    public void setSubtotal()
+    public void setSubtotal(int account)
     {
          subtotal =account*price;
     }
@@ -96,37 +109,62 @@ public class Item {
     {
         subtotal=account*price*discount;
     }
-    public ArrayList<Item> setmenu() throws IOException {
+    public ArrayList<Item> setmenu(String fl,String fs) throws IOException {
         ArrayList<Item> itemss = new ArrayList<Item>();
+        user use=new user();
+        FileReader fr = new FileReader(fl);
 
-        FileReader fr = new FileReader("C:\\Users\\xyl_c\\Documents\\Tencent Files\\451126338\\FileRecv\\POS-Seed\\2.txt");
         int ch=0;
-        int temp;
+        int temp=0;
         String tempbarcode="";
-        while((ch = fr.read())!=-1 ) {
 
-            if (ch == 39) {
-                while (true) {
+        while((ch = fr.read())!=-1 ) {
+            if(ch==105){
+                while(true) {
                     ch = fr.read();
-                    if (ch == 39) {
-                        // barCode=barcode;
-                        menu in = new menu();
-                        Item insert = new Item();
-                        temp = in.check(tempbarcode);
-                        insert.setBarCode(in.getbarcode(temp));
-                        insert.setName(in.getname(temp));
-                        insert.setUnit(in.getunit(temp));
-                        insert.setPrice(in.getprice(temp));
-                        insert.setDiscount(in.getdiscount(temp));
-                        insert.setPromote(in.getpromotion(temp));
-                        itemss.add(insert);
-                        tempbarcode="";
-                        i=i++;
+                    if(ch==91) {
+                        while(true) {
+                            ch=fr.read();
+                            if (ch == 39) {
+                                while (true) {
+                                    ch = fr.read();
+                                    if (ch == 39) {
+                                        // barCode=barcode;
+                                        menu in = new menu(fs);
+                                        Item insert = new Item();
+                                        temp = in.check(tempbarcode);
+                                        insert.setBarCode(in.getbarcode(temp));
+                                        insert.setName(in.getname(temp));
+                                        insert.setUnit(in.getunit(temp));
+                                        insert.setPrice(in.getprice(temp));
+                                        insert.setDiscount(in.getdiscount(temp));
+                                        insert.setPromote(in.getpromotion(temp));
+
+                                        itemss.add(insert);
+                                        tempbarcode = "";
+                                        i = i++;
+                                        break;
+                                    } else {
+                                        tempbarcode = tempbarcode + (char) ch;
+                                    }
+                                }
+                            }if(ch==93) {
+                                temp=1;
+                                break;
+                            }
+                        }
+
+                    }if(temp==1)
+                    {
                         break;
-                    } else {
-                        tempbarcode = tempbarcode + (char) ch;
                     }
+
+
                 }
+            }
+            if(temp==1)
+            {
+                break;
             }
         }
         return itemss;

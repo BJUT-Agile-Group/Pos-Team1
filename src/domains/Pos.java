@@ -53,15 +53,35 @@ public class Pos {
                 }
             }
         }
+        for (i=0;i<itemss.size();i++)
+        {
+           if(itemss.get(i).getPromote()==true)
+           {
+               if (itemss.get(i).getAccount()>2)
+               {
+                   itemss.get(i).setAccounting();
+                   itemss.get(i).setSubtotal(itemss.get(i).getAccounting());
+                   Discountprice=Discountprice+itemss.get(i).getPrice()*1;
+               }
+               else{
+                   itemss.get(i).setSubtotal(itemss.get(i).getAccount());
+               }
+           }
+            else {
+               if(itemss.get(i).getDiscount()!=1)
+               {
+                   itemss.get(i).setSubtotal(itemss.get(i).getAccount());
+                   Discountprice=Discountprice+itemss.get(i).getSubtotal()*(1-itemss.get(i).getDiscount());
+                   itemss.get(i).setdiscount();
+               }
+               else{
+                   itemss.get(i).setSubtotal(itemss.get(i).getAccount());
 
-        for (i = 0; i < itemss.size(); i++) {
-            itemss.get(i).setSubtotal();
-
-            Discountprice=Discountprice+itemss.get(i).getSubtotal()*(1-itemss.get(i).getDiscount());
-            itemss.get(i).setdiscount();
-            total = total + itemss.get(i).getSubtotal();
-
+               }
+           }
+            total=total+itemss.get(i).getSubtotal();
         }
+
 
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -73,17 +93,43 @@ public class Pos {
                     .append("单价：").append(String.format("%.2f", itemss.get(i).getPrice())).append("(元)").append("，")
                     .append("小计：").append(String.format("%.2f", itemss.get(i).getSubtotal())).append("(元)").append("\n");
 
+
+
         }
 
+        for (i=0;i<itemss.size();i++)
+        {
+            if(itemss.get(i).getAccounting()>0)
+            {
 
-        stringBuilder.append("----------------------\n")
-                .append("总计：").append(String.format("%.2f", total)).append("(元)").append("\n");
-        if(Discountprice==0)
-        {}
+                stringBuilder.append("----------------------\n")
+                        .append("挥泪赠送商品：\n");
+                break;
+            }
+
+        }
+
+                for(i=0;i<itemss.size();i++)
+                {
+                    if(itemss.get(i).getAccounting()>0)
+                    {
+                        stringBuilder.append("名称：")
+                                    .append(itemss.get(i).getName())
+                                    .append("数量：")
+                                    .append("1")
+                                    .append(itemss.get(i).getUnit())
+                                    .append("\n");
+                    }
+                }
+        stringBuilder.append("----------------------\n");
+        stringBuilder.append("总计：").append(String.format("%.2f", total)).append("(元)").append("\n");
+                if(Discountprice==0)
+                {}
         else {
-            stringBuilder .append("节省：").append(String.format("%.2f", Discountprice)).append("(元)").append("\n");
-        }
+                    stringBuilder .append("节省：").append(String.format("%.2f", Discountprice)).append("(元)").append("\n");
+                }
         stringBuilder .append("**********************\n");
+
         return stringBuilder
                 .toString();
     }

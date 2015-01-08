@@ -13,9 +13,10 @@ public class menu {
     private String [] _price =new String[10];
     private String [] _discount=new String[10];
     private String [] _promotion=new String[10];
+    private String [] _vipdiscount=new String[10];
     int i=0;
-    public  menu() throws IOException {
-        FileReader fr = new FileReader("C:\\Users\\xyl_c\\Documents\\Tencent Files\\451126338\\FileRecv\\POS-Seed\\1.txt");
+    public  menu(String fs) throws IOException {
+        FileReader fr =new FileReader(fs);
         int ch = 0;
         int temp=0;
         int j;
@@ -28,6 +29,7 @@ public class menu {
             _price[j]="";
             _discount[j]="";
             _promotion[j]="";
+            _vipdiscount[j]="";
         }
 
         while((ch = fr.read())!=-1 ){
@@ -63,6 +65,10 @@ public class menu {
                                     }
                                 }
                             }
+                            if(ch==44)
+                            {
+                                break;
+                            }
                             if(ch==10)
                             {
                                 break;
@@ -83,6 +89,10 @@ public class menu {
                                         _unit[i] = _unit[i] + (char)ch;
                                     }
                                 }
+                            }
+                            if(ch==44)
+                            {
+                                break;
                             }
                             if(ch==10)
                             {
@@ -193,6 +203,31 @@ public class menu {
                             }
                         }
                     }
+                    else if(ch==118){
+                        while(true)
+                        {
+                            ch=fr.read();
+                            ch= fr.read();
+                            if(ch == 58)
+                            {
+                                while(true ) {
+                                    ch=fr.read();
+                                    if (ch == 10||ch==13) {
+                                        //discount=Integer.parseInt(_discount);
+                                        temp=1;
+                                        break;
+                                    } else {
+                                        _vipdiscount[i] = _vipdiscount[i] + (char)ch;
+                                    }
+                                }
+                            }
+                            if(temp==1)
+                            {
+                                temp=0;
+                                break;
+                            }
+                        }
+                    }
                     else if(ch== 125)
                     {
                         i=i+1;
@@ -219,6 +254,7 @@ public class menu {
 //        }
 
     }
+
     public int check(String barCode) {
         int j = 0;
         int temp=0;
@@ -283,7 +319,15 @@ public class menu {
 
     public boolean getpromotion(int id) {
         boolean promotion;
+
         promotion=Boolean.parseBoolean(_promotion[id]);
         return promotion;
+    }
+    public double getvipdiscount(int id) {
+        double vipdiscount;
+        if(_vipdiscount[id]=="")
+            _vipdiscount[id]="1";
+        vipdiscount=Double.valueOf(_vipdiscount[id]);
+        return vipdiscount;
     }
 }
