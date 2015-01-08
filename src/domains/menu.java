@@ -207,7 +207,7 @@ public class menu {
                         while(true)
                         {
                             ch=fr.read();
-
+                            ch= fr.read();
                             if(ch == 58)
                             {
                                 while(true ) {

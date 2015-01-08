@@ -11,8 +11,6 @@ public class userData {
     private String usercode="";
     private String _name="";
     private boolean _isvip;
-    private int  integral;
-
 
     public String getUsercode() {
         return usercode;
@@ -36,17 +34,5 @@ public class userData {
 
     public boolean is_isvip() {
         return _isvip;
-    }
-
-   public void setIntegrat(int point)
-   {
-       integral=integral+point;
-   }
-    public void setIntegral2(int point)
-    {
-        integral=point;
-    }
-    public int getIntegral(){
-        return integral;
     }
 }

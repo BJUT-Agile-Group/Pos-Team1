@@ -10,9 +10,7 @@ public class Pos {
     public String getShoppingList(ShoppingChart shoppingChart) throws IOException {
         ArrayList<Item> items = shoppingChart.getItems();
         ArrayList<Item> itemss = new ArrayList<Item>();
-        userData userinfo=shoppingChart.getUserinfo();
         int i, j;
-        int point;
         double total = 0;
 
         double Discountprice=0;
@@ -59,84 +57,35 @@ public class Pos {
         {
            if(itemss.get(i).getPromote()==true)
            {
-               if (itemss.get(i).getAccount()>=2)
+               if (itemss.get(i).getAccount()>2)
                {
                    itemss.get(i).setAccounting();
                    itemss.get(i).setSubtotal(itemss.get(i).getAccounting());
                    Discountprice=Discountprice+itemss.get(i).getPrice()*1;
                }
                else{
-                   if(userinfo.is_isvip()==true)
-                   {
-                       itemss.get(i).setSubtotal(itemss.get(i).getAccount());
-                       Discountprice=Discountprice+itemss.get(i).getSubtotal()*(1-itemss.get(i).getVipdiscount());
-                       itemss.get(i).getVipdiscount();
-                   }
-                   else{
-                       itemss.get(i).setSubtotal(itemss.get(i).getAccount());
-                   }
-
+                   itemss.get(i).setSubtotal(itemss.get(i).getAccount());
                }
-           } else {
-               if(itemss.get(i).getDiscount()!=1) {
-                   if(userinfo.is_isvip()==true)
-                   {
-                        itemss.get(i).setSubtotal(itemss.get(i).getAccount());
-                        Discountprice=Discountprice+itemss.get(i).getSubtotal()*(1-itemss.get(i).getDiscount()*itemss.get(i).getVipdiscount());
-                        itemss.get(i).setVipsubtotal();
-                   }
-                   else
-                   {
-                       itemss.get(i).setSubtotal(itemss.get(i).getAccount());
-                       Discountprice=Discountprice+itemss.get(i).getSubtotal()*(1-itemss.get(i).getDiscount());
-                       itemss.get(i).setdiscount();
-                   }
-
+           }
+            else {
+               if(itemss.get(i).getDiscount()!=1)
+               {
+                   itemss.get(i).setSubtotal(itemss.get(i).getAccount());
+                   Discountprice=Discountprice+itemss.get(i).getSubtotal()*(1-itemss.get(i).getDiscount());
+                   itemss.get(i).setdiscount();
                }
                else{
-                   if(userinfo.is_isvip()==true)
-                   {
-                       itemss.get(i).setSubtotal(itemss.get(i).getAccount());
-                       Discountprice=Discountprice+itemss.get(i).getSubtotal()*(1-itemss.get(i).getVipdiscount());
-                       itemss.get(i).setVipsubtotal();
-                   }
-                   else
-                   {
-                       itemss.get(i).setSubtotal(itemss.get(i).getAccount());
-                   }
-
+                   itemss.get(i).setSubtotal(itemss.get(i).getAccount());
 
                }
            }
             total=total+itemss.get(i).getSubtotal();
         }
-        if(userinfo.is_isvip()) {
-            if (userinfo.getIntegral() >= 0 && userinfo.getIntegral() <= 200) {
-                point = (int) total / 5;
-                userinfo.setIntegrat(point);
-            } else if (userinfo.getIntegral() > 200 && userinfo.getIntegral() <= 500) {
-                point = 3 * ((int) total / 5);
 
-                userinfo.setIntegrat(point);
-            } else if (userinfo.getIntegral() > 500) {
-                point = 5 * ((int) total / 5);
-                userinfo.setIntegrat(point);
-            }
-        }
 
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("***商店购物清单***\n");
-        if(userinfo.is_isvip()==true)
-        {
-            stringBuilder.append("会员编号：")
-                        .append(userinfo.get_name())
-                        .append("积分：")
-                        .append(userinfo.getIntegral())
-                        .append("\n")
-                        .append("----------------------")
-                        .append("\n");
-        }
         for (i = 0; i < itemss.size(); i++) {
 
             stringBuilder.append("名称：").append(itemss.get(i).getName()).append("，")

@@ -23,7 +23,6 @@ public class Item {
     private String unit;
     private double price;
     private double discount;
-    private double vipdiscount;
     private int account;
     private int accounting;
     private double subtotal;
@@ -64,16 +63,6 @@ public class Item {
         this.promote = promote;
     }
 
-    public void setVipdiscount(double vipdiscount)
-    {
-        this.vipdiscount=vipdiscount;
-    }
-    public double getVipdiscount()
-    {
-        return  vipdiscount;
-    }
-
-
     public void setAccounting()
     {
         accounting=account-1;
@@ -108,12 +97,6 @@ public class Item {
     {
          subtotal =account*price;
     }
-
-    public void setVipsubtotal()
-    {
-        subtotal=account*price*discount*vipdiscount;
-    }
-
     public int getAccount()
     {
         return account;
@@ -156,8 +139,6 @@ public class Item {
                                         insert.setPrice(in.getprice(temp));
                                         insert.setDiscount(in.getdiscount(temp));
                                         insert.setPromote(in.getpromotion(temp));
-                                        insert.setVipdiscount(in.getvipdiscount(temp));
-
 
                                         itemss.add(insert);
                                         tempbarcode = "";
