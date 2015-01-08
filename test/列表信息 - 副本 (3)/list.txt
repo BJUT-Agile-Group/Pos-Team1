@@ -1,5 +1,0 @@
-user: 'USER0002',
-    items: [
-        'ITEM000004',
-
-    ]
