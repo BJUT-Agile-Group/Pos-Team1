@@ -1,8 +1,16 @@
 package domains;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import com.sun.xml.internal.txw2.output.XmlSerializer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -13,6 +21,7 @@ public class user {
     private userData out;
     private ArrayList<userData> user = new ArrayList<userData>();
     //user out = new user();
+    private ArrayList<userData> vip =  new ArrayList<userData>();
 
 
     public void setUser(ArrayList<userData> user) {
@@ -21,6 +30,52 @@ public class user {
 
     public ArrayList<userData> getUser() {
         return user;
+    }
+    private String path = "C:\\Users\\xyl_c\\Documents\\Tencent Files\\451126338\\FileRecv\\POS-Seed\\VIP.xml";
+    //读取积分信息
+     public  ArrayList<userData> getVIPdatafromXML() {
+        File xmlFile = new File(path);
+        int m,temp=-1;
+        try {
+            DocumentBuilder builder = null;
+            DocumentBuilderFactory factory = DocumentBuilderFactory
+                    .newInstance();
+            builder = factory.newDocumentBuilder();
+            Document document = builder.parse(xmlFile);
+            Element element = document.getDocumentElement();
+
+            NodeList noticeNodes = element.getElementsByTagName("vip");
+            for (int i = 0; i < noticeNodes.getLength(); i++) {
+                Element noticeElement = (Element) noticeNodes.item(i);
+                userData userInfo = new userData();
+
+                NodeList childNodes = noticeElement.getChildNodes();
+
+                for (int j = 0; j < childNodes.getLength(); j++) {
+                    if (childNodes.item(j).getNodeType() == Node.ELEMENT_NODE) {
+                        if ("usercode".equals(childNodes.item(j).getNodeName())) {
+                            userInfo.setUsercode(childNodes.item(j).getFirstChild()
+                                    .getNodeValue());
+                        } else if ("integral".equals(childNodes.item(j)
+                                .getNodeName())) {
+                            userInfo.setIntegrat(Integer.parseInt(childNodes.item(j)
+                                    .getFirstChild().getNodeValue()));
+                        }
+                    }
+                }
+                vip.add(userInfo);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        for(m=0;m<vip.size();m++)
+        {
+            temp=check(vip.get(m).getUsercode());
+            if(temp!=-1) {
+                user.get(temp).setIntegrat(vip.get(m).getIntegral());
+            }
+        }
+        return vip;
     }
 
     public int check(String usercode){
@@ -45,8 +100,8 @@ public class user {
     public userData getOut() {
         return out;
     }
-    public void setuser() throws IOException {
-        FileReader fr =new FileReader("F:\\POS-Seed(1)\\POS-Seed\\3.txt");
+    public void setuser(String fu) throws IOException {
+        FileReader fr =new FileReader(fu);
         int ch = 0;
         int temp=0;
         int i=0;
@@ -143,12 +198,11 @@ public class user {
                 }
             }
         }
+
     }
 
-
-
-    public void adduser() throws IOException {
-        FileReader fr = new FileReader("F:\\POS-Seed(1)\\POS-Seed\\2.txt");
+    public void adduser(String fl) throws IOException {
+        FileReader fr = new FileReader(fl);
         int ch=0;
         int temp=0;
         String tempbarcode="";
@@ -197,6 +251,19 @@ public class user {
         }
 
     }
+    public void change(userData changedata){
+        int i,temp=-1;
 
+            temp=check(changedata.getUsercode());
+
+            if (temp != -1) {
+
+                user.get(temp).setIntegral2(changedata.getIntegral());
+
+            }
+
+        VIPDataToXML creat=new VIPDataToXML(user);
+        creat.DataToXML();
+    }
 
 }
